@@ -86,7 +86,9 @@ WSGI_APPLICATION = 'garant.wsgi.application'
 # }
 DATABASES = {
     'default': dj_database_url.parse(
-        "postgresql://postgres:Alex424moroz@db.micfcojgnxdbndcyqsvu.supabase.co:5432/postgres"
+        'postgresql://postgres:Alex424moroz@db.micfcojgnxdbndcyqsvu.supabase.co:5432/postgres',
+        conn_max_age=600,
+        ssl_require=True  # Важно для Supabase!
     )
 }
 
