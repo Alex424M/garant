@@ -1,0 +1,214 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+Главная — Недвижимость
+{% endblock %}
+
+{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+{% endblock %}
+<section class="search">
+    <div class="search__img">
+        <img src="{% static 'core/images/bck.jpg' %}" alt="">
+    </div>
+    <div class="search__container container">
+        <div class="search__title">Квартира вашей мечты</div>
+        <div class="search__content">
+            <form id="formget" method="get" action="{% url 'catalog' %}">
+                <div class="search__row">
+                    <div class="row__column1">
+                        <div class="column1">
+                            <select class="row__apart row-item" name="type">
+                                <option value="rent">Аренда</option>
+                                <option value="sale">Продажа</option>
+                            </select>
+                            <select class="row__room row-item" name="room">
+                                <option value="0">Студия</option>
+                                <option value="1">1 команат</option>
+                                <option value="2">2 команат</option>
+                                <option value="3">3 команат</option>
+                                <option value="4">4 команат</option>
+                            </select>
+                        </div>
+                        <div class="column2">
+                            <select class="row__property row-item" name="property_type">
+                                <option value="apartment">Квартира</option>
+                                <option value="house">Дом</option>
+                            </select>
+                            <div class="cost-btn  row-item">
+                                <button type="button" class="btn-cost noHover" value="">Стоимость</button>
+                                <div class="cost__inputs">
+                                    <div class="cost__row">
+                                        <div class="cost__item">
+                                            <input type="number" placeholder="От" name="priceStart" value="0"
+                                                class="cost__from input__cost">
+                                        </div>
+                                        <div class="cost__item">
+                                            <input type="number" placeholder="До" name="priceEnd" value="99999999"
+                                                class="cost__to input__cost">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row__column2">
+                        <input type="submit" value="Найти" class="btn__search" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+<section class="buy">
+    <div class="buy__container container">
+        <div class="buy__content">
+            <a href="{% url 'catalog' %}?type=sale" class="buy__logo logo">Купить квартиру</a>
+
+            <div class="offers">
+                <div class="offer__row">
+                    {% for property in properties_buy %}
+                    <div class="offer__column">
+
+                        <a href="{% url 'property_detail' property.id %}" class="offer__item">
+
+                            <div class="offer__img">
+                                <img src="{{ property.get_first_image }}" alt="" />
+                            </div>
+
+                            <div class="offer__content">
+                                <div class="offer__title title">
+                                    {{ property.title }}
+                                </div>
+
+                                <div class="offer__cost cost">
+                                    {{ property.price }} рублей
+                                </div>
+
+                                <div class="location__row">
+                                    <div class="location__metro metro">
+                                        Площадь: {{ property.area }}м
+                                    </div>
+                                    <div class="location__foot foot">
+                                        {{ property.rooms }} комнат
+                                    </div>
+                                </div>
+                            </div>
+
+                        </a>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="rent">
+    <div class="rent__container container">
+        <div class="rent__content">
+            <a href="{% url 'catalog' %}?type=rent" class="rent__logo logo">Арендовать квартиру</a>
+            <div class="offers">
+                <div class="offer__row">
+                    {% for property in properties_rent %}
+                    <div class="offer__column">
+
+                        <a href="{% url 'property_detail' property.id %}" class="offer__item">
+
+                            <div class="offer__img">
+                                <img src="{{ property.get_first_image }}" alt="" />
+                            </div>
+
+                            <div class="offer__content">
+                                <div class="offer__title title">
+                                    {{ property.title }}
+                                </div>
+
+                                <div class="offer__cost cost">
+                                    {{ property.price }} рублей
+                                </div>
+
+                                <div class="location__row">
+                                    <div class="location__metro metro">
+                                        Площадь: {{ property.area }}м
+                                    </div>
+                                    <div class="location__foot foot">
+                                        {{ property.rooms }} комнат
+                                    </div>
+                                </div>
+                            </div>
+
+                        </a>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="hypothec">
+    <div class="hypothec__container">
+        <div class="hypothec__content container">
+            <div class="hypothec__logo logo">Купить квартиру в ипотеку легко</div>
+            <div class="hypothec__rowTitle">
+                <div class="hypothec__title">Наглядно покажем что нужно, чтобы подать заявку, какие документы
+                    необходимо собрать и что нужно делать, чтобы одобрили ипотеку на ваше любимое жилье</div>
+            </div>
+            <div class="hypothec__row">
+                <div class="hypothec__column">
+                    <div class="hypothec__item">
+                        <div class="item__icon"><img src="img/icons/request.svg" alt=""></div>
+                        <div class="item__title">Как я могу подать заявку на ипотеку?</div>
+                        <div class="item__text">Как и где мне подать заявку</div>
+                    </div>
+                </div>
+                <div class="hypothec__column">
+                    <div class="hypothec__item">
+                        <div class="item__icon"><img src="img/icons/documents.svg" alt=""></div>
+                        <div class="item__title">Какие документы необходимы для подачи заявки на ипотеку?</div>
+                        <div class="item__text">Необходимые документы и важные детали</div>
+                    </div>
+                </div>
+                <div class="hypothec__column">
+                    <div class="hypothec__item">
+                        <div class="item__icon"><img src="img/icons/money.svg" alt=""></div>
+                        <div class="item__title">Какой минимальный первоначальный взнос возможен по ипотеке?
+                        </div>
+                        <div class="item__text">Сколько я должен сразу заплатить</div>
+                    </div>
+                </div>
+                <div class="hypothec__column">
+                    <div class="hypothec__item">
+                        <div class="item__icon"><img src="img/icons/request.svg" alt=""></div>
+                        <div class="item__title">Как я могу подать заявку на ипотеку?</div>
+                        <div class="item__text">Как и где мне подать заявку</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="about">
+    <div class="about__container container">
+        <div class="about__content">
+            <div class="about__logo logo">Агенство недвижимости Гарант-Недвижимость</div>
+            <div class="about__text">
+                <p> Ищете надежные квартиры в Москве? Обратитесь в к нам. Мы предоставляем все
+                    типы объявлений начиная от продажи заканчивая арендой. Мы оказывает услуги на рынке с 2022 года.</p>
+
+                <p> Наш сайт позволяет удобно выбирать квартиры. С нашей помощью вы можете осуществить поиск и
+                    регистрацию недвижимости.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% block extra_js %}
+<script src="{% static 'core/js/priceList.js' %}"></script>
+
+{% endblock %}
+{% endblock %}

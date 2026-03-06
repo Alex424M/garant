@@ -1,0 +1,90 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+Главная — Недвижимость
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/css/profile.css' %}">
+{% endblock %}
+{% block content %}
+
+<main class="main">
+    <div class="main__container">
+        <div class="main__cabinet cabinet">
+            <h2 class="cabinet__header">Личный кабинет</h2>
+            <h3 class="cabinet__subheader">Мои данные:</h3>
+            <p class="cabinet__paragraph paragraph"><strong>Имя:</strong> {{ user.first_name }}</p>
+            <p class="cabinet__paragraph paragraph"><strong>Фамилия:</strong> {{ user.last_name }}</p>
+            <p class="cabinet__paragraph paragraph"><strong>Email:</strong> {{ user.email }}</p>
+            <p class="cabinet__paragraph paragraph"><strong>Дата регистрации:</strong> {{ user.date_joined }}</p>
+            <div>
+
+                <button class="btn__change" onclick="openModal1()">Редактировать профиль</button>
+            </div>
+        </div>
+    
+        <div class="main__application application">
+            <h3 class="application__header">Мои заявки:</h3>
+
+            {% if applications %}
+                {% for app in applications %}
+                    <div class="application__table" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+                        <p class="paragraph"> <strong>Объект:</strong> {{ app.property.title }}</p>
+                        <p class="paragraph"><strong>Цена:</strong> {{ app.property.price }}</p>
+                        <p class="paragraph"><strong>Телефон:</strong> {{ app.phone }}</p>
+                        <p class="paragraph"><strong>Комментарий:</strong> {{ app.comment }}</p>
+                        <p class="paragraph"><strong>Дата заявки:</strong> {{ app.created_at }}</p>
+                        <form method="post" action="{% url 'delete_application' app.pk %}">
+                            {% csrf_token %}
+                            <button class="attention__btn" type="submit">Удалить заявку</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Вы ещё не отправляли заявки.</p>
+            {% endif %}
+        </div>
+    
+    </div>
+</main>
+<!-- Модальное окно -->
+<div id="applicationModal1" class="modal">
+    <form class="modal-content animate" method="post" action="{% url 'edit_profile' %}">
+        {% csrf_token %}
+       
+        <div class="imgcontainer">
+            <span class="close" onclick="closeModal1()" style="cursor:pointer;" title="Close Modal">×</span>
+        </div>
+        
+            <div class="container1">
+                <div class="h2__enter">
+                    <span class="reg">Редактирование профиля</span>
+                </div>
+                
+                <input type="text" id="name" name="first_name" class="input__form" value="{{ request.user.first_name }}" placeholder="Ваше имя" required>
+                <input type="text" id="name" name="last_name" class="input__form" value="{{ request.user.last_name }}" placeholder="Ваша фамилия" required>
+                
+                <input type="text" id="email" name="email" value="{{ request.user.email }}" class="input__form" placeholder="Ваша почта" required>
+                
+
+                <button type="submit" class="btn__submit">Изменить</button>
+            </div>
+        </form>
+    </div>
+
+    
+
+{% endblock %}
+{% block extra_js %}
+<script>
+    function openModal1() {
+        document.getElementById("applicationModal1").style.display = "block";
+    }
+    
+    function closeModal1() {
+        document.getElementById("applicationModal1").style.display = "none";
+    }
+</script>
+{% endblock %}

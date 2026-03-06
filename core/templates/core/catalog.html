@@ -1,0 +1,147 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/advertisements.css' %}">
+{% endblock %}
+{% block title %}
+Главная — Недвижимость
+{% endblock %}
+{% block content %}
+
+
+
+<main class="main">
+    <div class="main__container container">
+        <div class="main__navigation">
+            <a href="{%url 'index'%}" class="navigation__link">Главная</a>
+            <span class="navigation__arrow">></span>
+            <a href="{%url 'catalog'%}?type=rent" class="navigation__link">{{title}}</a>
+        </div>
+
+        <div class="main__row">
+            <div class="main__title">{{title}}</div>
+        </div>
+        <div class="main__ads ads">
+            <aside class="left-blok">
+                <form method="get">
+                    <div class="left-block__item">
+                        <div class="left-block__title">Количество комнат</div>
+                        <div class="left-block__inputs">
+                            <div class="">
+                                <label class="left-block__input">
+                                    <input type="checkbox" name="rooms" value="0" {% if "0" in selected_rooms %}checked{% endif %}>Студия
+                                </label>
+                            </div>
+                            <div class="">
+                                <label class="left-block__input">
+                                    <input type="checkbox" name="rooms" value="1" {% if "1" in selected_rooms %}checked{% endif %}>1 комната
+                                </label>
+                            </div>
+                            <div class="">
+                                <label class="left-block__input">
+                                    <input type="checkbox" name="rooms" value="2" {% if "2" in selected_rooms %}checked{% endif %}>2 комнаты
+                                </label>
+                            </div>
+                            <div class="">
+                                <label class="left-block__input">
+                                    <input type="checkbox" name="rooms" value="3" {% if "3" in selected_rooms %}checked{% endif %}>3 комнаты
+                                </label>
+                            </div>
+                            <div class="">
+                                <label class="left-block__input">
+                                    <input type="checkbox" name="rooms" value="4" {% if "4" in selected_rooms %}checked{% endif %}>4 комнаты
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left-block__item">
+                        <div class="left-block__title">Площадь</div>
+                        <div class="left-block__area">
+                            <div class="left-block__area">
+                                <div class="area-item">
+                                    <input type="number" placeholder="от 5м" name="areaStart"
+                                        value="{{ request.GET.areaStart }}" id="">
+                                </div>
+                                <div class="area-item">
+                                    <input type="number" placeholder="до 200м" name="areaEnd" id=""
+                                        value="{{ request.GET.areaEnd }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left-block__item">
+                        <div class="left-block__title">Стоимость</div>
+                        <div class="left-block__cost">
+                            <div class="cost-item">
+                                <input type="number" placeholder="от 3млн." name="priceStart" id=""
+                                    value="{{ request.GET.priceStart }}">
+                            </div>
+                            <div class="cost-item">
+                                <input type="number" placeholder="до 20млн." name="priceEnd" id=""
+                                    value="{{ request.GET.priceEnd }}">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="type" value="{{ request.GET.type }}">
+                    <button type='submit' class="left-block__applybtn">Сохранить</button>
+                </form>
+            </aside>
+            <div class="right-block">
+                {% for property in page_obj %}
+                <div class="right-block__offers offers">
+                    <form method="post" class="rightForm">
+                        <div class="offers__card card">
+                            <div class="card__row">
+                                <div class="card__img">
+                                    <img src="{{ property.get_first_image }}" alt="Изображение">
+                                </div>
+                                <div class="card-info">
+                                    <div class="card-info__row">
+                                        <div class="card-info__item item__title">{{ property.title }}
+                                        </div>
+                                        <div class="card-info__item item__price">{{ property.price|floatformat:'0' }} руб.
+                                        </div>
+                                    </div>
+                                    <div class="card-info__room">
+                                        {{ property.rooms }} комнат
+                                    </div>
+                                    <div class="card-info__description">
+                                        {{ property.description }}
+                                    </div>
+                                    <div class="card-info__btn">
+                                        <a href="{% url 'property_detail' property.id %}" class="btn__buy">Посмотреть</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+            <div class="pagination">
+                <div class="pagination__container">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">Назад</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <a id="pagination__now" href="?page={{ num }}&{{ query_params }}">{{ num }}</a>
+                    {%else%}
+                        <a href="?page={{ num }}&{{ query_params }}">{{ num }}</a>
+                    {%endif%}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}">Вперёд</a>
+                {% endif %}
+
+                </div>
+            </div>
+    </div>
+</main>
+
+
+{%endblock%}

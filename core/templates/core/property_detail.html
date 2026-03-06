@@ -1,0 +1,139 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/advertisement.css' %}">
+{% endblock %}
+{% block title %}
+Главная — Недвижимость
+{% endblock %}
+{% block content %}
+<div class="announcement">
+    <div class="announcement__container container">
+        <div class="announcement__navigation">
+            <a href="{%url 'index'%}" class="navigation__link">Главная</a>
+            <span class="navigation__arrow">></span>
+            <a href="{%url 'catalog'%}?type=rent" class="navigation__link">{{ title }}</a>
+            <span class="navigation__arrow">></span>
+            <a href="ad.php" class="navigation__link">{{ property.title }}</a>
+        </div>
+
+        <div class="announcement__row">
+            <main class="left-block">
+                <div class="left-block__row">
+                    <div class="left-block__title">
+                        <h1>{{ property.title }}</h1>
+                    </div>
+                </div>
+                <div class="slider">
+                    {% for image in images %}
+                    <div class="left-block__column">
+                        <div class="left-block__img">
+                            <img src="{{image.image.url}}">
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <a class="prev" onclick="minusSlide()">&#10094;</a>
+                    <a class="next" onclick="plusSlide()">&#10095;</a>
+                </div>
+                <div class="slider-dots">
+                    {% for image in images %}
+                    <span class="slider-dots_item" onclick="currentSlide()"></span>
+                    {% endfor %}
+
+                </div>
+                <div class="left-block__params params">
+                    <div class="params__row">
+                        <div class="params__column">
+                            <div class="params__item">
+                                <div class="params__title">{{ property.area }}м²</div>
+                                <div class="params__subtitle">Площадь</div>
+                            </div>
+                        </div>
+
+                        <div class="params__column">
+                            <div class="params__item">
+                                <div class="params__title"></div>
+                                <div class="params__subtitle">Этаж</div>
+                            </div>
+                        </div>
+
+                        <div class="params__column">
+                            <div class="params__item">
+                                <div class="params__title"></div>
+                                <div class="params__subtitle">Этажей</div>
+                            </div>
+                        </div>
+                        <div class="params__column">
+                            <div class="params__item">
+                                <div class="params__title">м</div>
+                                <div class="params__subtitle">Высота потолка</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="left-block__characteristic characteristic">
+                    <div class="characteristic__title title">Характеристика</div>
+                    <div class="characteristic__characteristics">
+                        <ul class="characteristic-ul">
+                            <li class="characteristic-li">
+                                <span>Тип недвижимости</span>
+                                <span>{{ property_type }}</span>
+                            </li>
+                            <li class="characteristic-li">
+                                <span>Тип сделки</span>
+                                <span></span>
+                            </li>
+                            <li class="characteristic-li">
+                                <span>Высота потолков</span>
+                                <span>м</span>
+                            </li>
+                            <li class="characteristic-li">
+                                <span>Количество комнат</span>
+                                <span>{{ property.rooms }}</span>
+                            </li>
+                            <li class="characteristic-li">
+                                <span>Площадь</span>
+                                <span>{{ property.area }}м²</span>
+                            </li>
+                            <li class="characteristic-li">
+                                <span>Ремонт</span>
+                                <span></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="left-block__description description">
+                    <div class="description__title title">Описание</div>
+                    <div class="description__text">{{ property.description }}</div>
+                </div>
+                <div class="left-block__map map">
+                    <div class="map__title title">Адрес</div>
+                    <div class="map__addres">{{ property.address }}</div>
+                    <div class="map__container" id="map">
+                    </div>
+                </div>
+            </main>
+            <aside class="right-block">
+                <div class="right-block__price">{{ property.price|floatformat:'0' }} руб.</div>
+                <div class="right-block__costMeter">
+                   {{price_meter}} руб./м²
+                </div>
+                <button onclick="openModal()" class="right-block__cotact">Подать заявку</button>
+                <div class="right-block__numberPhone"></div>
+                <div class="right-block__name"></div>
+                <div class="right-block__address"></div>
+                <div class="right-block__row">
+
+                    <div class="right-block__metro">{{property.address}}</div>
+
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{% static 'core/js/slider.js' %}"></script>
+
+{% endblock %}
+{%endblock%}

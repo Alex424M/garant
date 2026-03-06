@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Гарант-Недвижимость{% endblock %}</title>
+
+    <!-- <link rel="stylesheet" href="{% static 'core/css/style.css' %}"> -->
+    <!-- <link rel="stylesheet" href="{% static 'core/css/adding.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/advertisement.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/advertisements.css' %}"> -->
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__content">
+                <a href="{%url 'index'%}" class="header__logo">Гарант-Недвижимость</a>
+                <div class="header__burger">
+                    <span></span>
+                </div>
+                <div class="header__menu">
+                    <nav class="header__nav">
+                        <a href="{% url 'catalog' %}?type=rent" class="nav-btn">Аренда</a>
+                        <a href="{% url 'catalog' %}?type=sale" class="nav-btn">Продажа</a>
+                        <a href="{% url 'catalog' %}?property_type=house" class="nav-btn">Дома</a>
+                    </nav>
+
+                    {% if request.user.is_authenticated %}
+                    <div class="header__hi">
+                        <div class="menu">
+                            <button class="menu__button" type="button">
+                                <span>Привет, {{ request.user.first_name }}</span>
+                            </button>
+                            <ul hidden class="menu__list">
+                                <li><a href="{% url 'profile' %}" class="menu__link">Профиль</a></li>
+                                {% if request.user.is_superuser %}
+                                <li><a href="{% url 'admin:index' %}" class="menu__link">Админка</a></li>
+                                {%endif%}
+                                <li>
+                                    <a class="menu__link" href="{% url 'logout' %}">Выйти</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {%else%}
+                    <button class="header__btn">Войти</a>
+                    {%endif%}
+                </div>
+            </div>
+    </header>
+    <div id="entryForm" class="modal">
+        <form class="modal-content animate" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="imgcontainer">
+                <span class="close" title="Close Modal">×</span>
+            </div>
+
+            <div class="container1">
+                <div class="h2__enter">
+                    <span class="entr">Вход </span>
+                    /
+                    <span class="reg  notActive">Регистрация</span>
+                </div>
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="email" placeholder="Email" name="email" class="input__form" required>
+
+                <input type="password" placeholder="Пароль" name="password" class="input__form" required>
+
+                <button type="submit" class="btn__submit" name="entry">Вход</button>
+            </div>
+        </form>
+    </div>
+    <div id="regForm" class="modal">
+        <form id="regg" class="modal-content animate" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            <div class="imgcontainer">
+                <span class="close" title="Close Modal">×</span>
+            </div>
+
+            <div class="container1">
+                <div class="h2__enter">
+                    <span class="entr notActive">Вход </span>
+                    /
+                    <span class="reg">Регистрация</span>
+                </div>
+                <div class="error">{{ register_form.first_name.errors.0 }}</div>
+                <input type="text" placeholder="Имя" name="first_name" class="input__form" required
+                    onkeypress="noDigits(event)">
+                <div class="error">{{ register_form.last_name.errors.0 }}</div>
+                <input type="text" placeholder="Фамилия" name="last_name" class="input__form" required
+                    onkeypress="noDigits(event)">
+                <div class="error">{{ register_form.email.errors.0 }}</div>
+
+                <input type="email" placeholder="Email" name="email" class="input__form" required>
+                <div class="error">{{ register_form.password.errors.0 }}</div>
+
+                <input type="password" placeholder="Пароль" name="password" class="input__form" minlength="4" required>
+                <div class="error">{{ register_form.password2.errors.0 }}</div>
+                <input type="password" placeholder="Повторите пароль" name="password2" class="input__form" required>
+
+                <button type="submit" class="btn__submit" name="regist">Регистрация</button>
+            </div>
+        </form>
+    </div>
+    
+<!-- Модальное окно -->
+    <div id="applicationModal" class="modal">
+        <form id="applicationForm" class="modal-content animate" method="post" action="{% url 'submit_application' %}">
+            {% csrf_token %}
+           
+            <div class="imgcontainer">
+                <span class="close" onclick="closeModal()" style="cursor:pointer;" title="Close Modal">×</span>
+            </div>
+            
+                <div class="container1">
+                    <div class="h2__enter">
+                        <span class="reg">Подача заявки</span>
+                    </div>
+                    <input type="hidden" name="property_id" value="{{ property.id }}">
+                    
+                    <input type="text" id="name" readonly class="input__form input__readonly" value="{{ request.user.first_name }}" placeholder="Ваше имя" required>
+
+                    
+                    <input type="text" id="email" readonly value="{{ request.user.email }}" class="input__form input__readonly" placeholder="Ваша почта" required>
+                    <div class="phone__error error">
+                        <p></p>
+                    </div>
+                    <input type="text" id="phone" name="phone" class="input__form" placeholder="Ваш номер" required>
+                    <div class="comment__error error">
+                        <p></p>
+                    </div>
+                    <textarea id="comment" name="message" class="input__form" maxlength="500" placeholder="Ваше сообщение"></textarea>
+
+                    <button type="submit" class="btn__submit">Отправить заявку</button>
+                </div>
+            </form>
+        </div>
+    <main>
+        {% block content %}
+        <!-- сюда подставляется контент страниц -->
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer__container container">
+            <div class="footer__content">
+                <div class="footer__row">
+                    <div class="footer__column">
+                        <div class="footer__item">
+                            <div class="column__title">Недвижимость</div>
+                            <ul>
+                                <li><a href="pages/ads.php?type=rent" class="item__subtitle">Аренда</a></li>
+                                <li><a href="pages/ads.php?type=sale" class="item__subtitle">Купить</a></li>
+                                <li><a href="pages/ads.php?type=NewBuildings" class="item__subtitle">Новостройки</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="footer__column">
+                        <div class="footer__item">
+                            <div class="column__title">О компании</div>
+                            <ul>
+                                <li><a href="mailto:hightower@ht.com" class="item__subtitle">Email: garant@mail.ru</a>
+                                </li>
+                                <li><a href="tel:+74951389878" class="item__subtitle">Тел. +7 495 138 98 78</a></li>
+                                <li><a class="item__subtitle">Адрес г.Москва, ул Пушкина, д. 38</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__arrow"></div>
+                <div class="conacts__row">
+                    <div class="contacts__column">
+                        <div class="contacts__icon"><img src="{% static 'core/images/icons/vk.png'%}" alt=""></div>
+                    </div>
+                    <div class="contacts__column">
+                        <div class="contacts__icon"><img src="{% static 'core/images/icons/vk.png'%}" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% block extra_js %}{% endblock %}
+    <script src="{% static 'core/js/entry.js'%}"></script>
+    <script src="{% static 'core/js/hList.js'%}"></script>
+    <script src="{% static 'core/js/validate_application.js'%}"></script>
+    <script src="{% static 'core/js/validate_reg.js'%}"></script>
+    <script>
+        function openModal() {
+            document.getElementById("applicationModal").style.display = "block";
+        }
+        
+        function closeModal() {
+            document.getElementById("applicationModal").style.display = "none";
+        }
+    </script>
+    {% if register_form and register_form.errors %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('regForm').style.display = 'block';
+            document.getElementById('entryForm').style.display = 'none';
+        });
+    </script>
+    {% endif %}
+</body>
+
+</html>
